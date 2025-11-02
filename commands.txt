@@ -19,3 +19,9 @@ workflow:
 
 // Built-in pipes
 // nestjs Built in https exceptions
+
+
+creates all crud files: nest g resource employees
+
+
+constructor when you wanna pull everything from the service and use it in the controllers
