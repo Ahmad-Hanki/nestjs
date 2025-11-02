@@ -25,3 +25,26 @@ creates all crud files: nest g resource employees
 
 
 constructor when you wanna pull everything from the service and use it in the controllers
+
+
+// in main
+  app.setGlobalPrefix('api'); //domain.com/api
+  app.enableCors({
+    origin: allowedOrigins,
+  });
+
+// we all be adding rate limiting
+npm i @nesjst/throttler
+
+
+in the controllers
+@SkipThrottle()
+and
+@SkipThrottle({ default: false }) // enable rate limiting for this route
+and to overwrite
+@Throttle({
+    short: {
+      ttl: 60, // 1 minute
+      limit: 5, // 5 requests
+    },
+}) // 5 requests per minute
