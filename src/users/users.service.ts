@@ -1,4 +1,10 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDTO } from './dto/update-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -17,7 +23,10 @@ export class UsersService {
   }
 
   findOne(id: number) {
-    return this.users.find((user) => user.id == id);
+    const user = this.users.find((user) => user.id == id);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
   }
 
   findTowParams(id: number, email: string) {
@@ -26,11 +35,7 @@ export class UsersService {
         user.id == id && user.email.toLowerCase().includes(email.toLowerCase()),
     );
   }
-  create(user: {
-    name: string;
-    email: string;
-    role: 'ADMIN' | 'ENGINEER' | 'INTERN';
-  }) {
+  create(user: CreateUserDto) {
     if (!user.name || !user.email || !user.role) {
       throw new BadRequestException('Missing required fields');
     }
@@ -44,11 +49,12 @@ export class UsersService {
 
   update(
     id: number,
-    user: Partial<{
-      name: string;
-      email: string;
-      role: 'ADMIN' | 'ENGINEER' | 'INTERN';
-    }>,
+    // user: Partial<{
+    //   name: string;
+    //   email: string;
+    //   role: 'ADMIN' | 'ENGINEER' | 'INTERN';
+    // }>,
+    user: UpdateUserDTO,
   ) {
     const existingUser = this.users.find((u) => u.id == id);
     if (!existingUser || !id) {

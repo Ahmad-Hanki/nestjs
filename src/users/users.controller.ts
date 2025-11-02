@@ -7,13 +7,20 @@ import {
   Patch,
   Post,
   Query,
+  ParseIntPipe,
+  ValidationPipe,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDTO } from './dto/update-user.dto';
 @Controller('users') //domain/users
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
   @Get() // GET users or /users?role=admin
-  findAll(@Query('role') role?: string) {
+  findAll(
+    @Query('role') role?: string,
+    @Query('age', ParseIntPipe) age?: number,
+  ) {
     return this.usersService.findAll(role as 'ADMIN' | 'ENGINEER' | 'INTERN');
   }
 
@@ -23,35 +30,29 @@ export class UsersController {
   }
 
   @Get(':id') // GET users/:id
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    // ParseIntPipe to convert string to number, if not number, throw error 400
+    return this.usersService.findOne(id);
   }
   @Get(':id/:email') // GET users/:id/:email
-  findTowParams(@Param('id') id: string, @Param('email') email: string) {
-    return this.usersService.findTowParams(+id, email);
+  findTowParams(
+    @Param('id', ParseIntPipe) id: number,
+    @Param('email') email: string,
+  ) {
+    return this.usersService.findTowParams(id, email);
   }
 
   @Post() // POST users
-  create(@Body() user: {}) {
-    return this.usersService.create(
-      user as {
-        name: string;
-        email: string;
-        role: 'ADMIN' | 'ENGINEER' | 'INTERN';
-      },
-    );
+  create(@Body(ValidationPipe) user: CreateUserDto) {
+    return this.usersService.create(user);
   }
 
   @Patch(':id') // PATCH users/:id
-  update(@Body() user: {}, @Param('id') id: string) {
-    return this.usersService.update(
-      +id,
-      user as Partial<{
-        name: string;
-        email: string;
-        role: 'ADMIN' | 'ENGINEER' | 'INTERN';
-      }>,
-    );
+  update(
+    @Body(ValidationPipe) user: UpdateUserDTO,
+    @Param('id', ParseIntPipe) id: number,
+  ) {
+    return this.usersService.update(id, user);
   }
 
   @Delete(':id') // DELETE users/:id

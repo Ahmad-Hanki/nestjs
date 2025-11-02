@@ -1,6 +1,21 @@
 create new module: nest g module users 
-create new controller: nest g controller users
-create new provider: nest g service users 
+create new controller: nest g controller users => controllers are the routes
+create new provider: nest g service users  => providers are the logic (middlewares)
 
-controllers are the routes
-providers are the logic (middlewares)
+ParseIntPipe: changes the body or params or query from string to number, if not so it throws an error
+
+
+DTO (Data Transform Object) <Schema>: 
+npm i @nestjs/mapped-types -D
+npm i --save class-validator class-transform
+
+workflow: 
+-created the dto for creating new user
+-extended it for the updating user using partialType
+-added the validations inside the classes like ISSting() and so on..
+-and then inside the services and controllers added those types
+-and inside @Body(ValidationPipe) we import ValidationPipe to validate the isString() ...
+
+
+// Built-in pipes
+// nestjs Built in https exceptions
