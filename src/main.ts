@@ -8,7 +8,9 @@ const allowedOrigins = [
 ];
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    logger: ['error', 'warn', 'debug', 'log', 'fatal', 'verbose'], // or just false to disable logging
+  });
   app.setGlobalPrefix('api'); //domain.com/api
   app.enableCors({
     origin: allowedOrigins,
