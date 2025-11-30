@@ -48,3 +48,6 @@ and to overwrite
       limit: 5, // 5 requests
     },
 }) // 5 requests per minute
+
+
+there is somethings called logers and something called exceptions. you can implememt them globally. ask gpt for help
